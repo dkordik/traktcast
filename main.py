@@ -7,6 +7,7 @@ from traktcast.trakt import configure_trakt_client
 from traktcast.hulu import HuluHandler
 from traktcast.scrobble import TraktScrobblerListener
 
+VIDEO_DEVICE_TYPES = ['Chromecast', 'Chromecast Ultra']
 
 if __name__ == '__main__':
     logging.basicConfig()
@@ -14,8 +15,12 @@ if __name__ == '__main__':
 
     configure_trakt_client()
 
-    devices = pychromecast.get_chromecasts()
-    for device in devices:
+    devices, service_browser = pychromecast.get_chromecasts()
+    video_devices = (device for device in devices if device.model_name in VIDEO_DEVICE_TYPES)
+
+    for device in video_devices:
+        device.wait()
+
         device.register_handler(HuluHandler(device))
         device.media_controller.register_status_listener(TraktScrobblerListener(device))
 
