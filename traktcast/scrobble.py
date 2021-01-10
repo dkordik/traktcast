@@ -15,6 +15,7 @@ class TraktScrobblerListener(object):
 
     def new_media_status(self, status: pychromecast.controllers.media.MediaStatus):
         scrobble_args = {}
+
         if status.media_is_tvshow:
             scrobble_args['show'] = {
                 'title': status.series_title
@@ -23,6 +24,12 @@ class TraktScrobblerListener(object):
                 'season': status.season,
                 'number': status.episode
             }
+        elif status.media_is_movie:
+            scrobble_args['movie'] = {
+                'title': status.title
+            }
+        else:
+            return
 
         progress = 0
         if status.duration != 0:
@@ -44,5 +51,4 @@ class TraktScrobblerListener(object):
 
         if scrobble_action:
             resp = trakt.Trakt['scrobble'][scrobble_action](**scrobble_args)
-            log.debug('Scrobble %s event for %s - %s (%dx%d) [%d%%]: %s', scrobble_action.upper(), status.series_title,
-                      status.title, status.season, status.episode, progress, 'SUCCESS' if resp else 'FAILURE')
+            print('Scrobble ', scrobble_args, ('SUCCESS' if resp else 'FAILURE'))
