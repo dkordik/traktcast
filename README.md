@@ -10,7 +10,9 @@ Automatically scrobble what's playing on Chromecast to Trakt
 # Installation
 1. Clone the repo: `git clone https://github.com/milas/traktcast`
 2. Install dependencies: `pip install -r requirements.txt`
-3. Run: `python main.py`
+3. Generate new Trakt API app: https://trakt.tv/oauth/applications/new (put `urn:ietf:wg:oauth:2.0:oob` as "Redirect uri")
+4. Update `trakt.py` `PROD_TRAKT_CLIENT_ID` with your new client ID
+5. Run: `python main.py`
 
 
 # Authentication
